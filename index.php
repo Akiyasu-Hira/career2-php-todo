@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <link rel="stylesheet" href="https://npmcdn.com/flatpickr/dist/themes/material_blue.css">
     <title>TODO App</title>
 </head>
+
 <body>
 
 <div class="container">
