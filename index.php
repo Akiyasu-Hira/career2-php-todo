@@ -25,14 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     <div class="col-md-8">
         <h1 class="text-center text-primary py-3">TODO App</h1>
 
-        <h2 class="text-muted py-3">TODO作成</h2>
+        <h2 class="text-muted py-3">TODO作成ひらあきやす</h2>
         <form method="POST" action="<?php print($_SERVER['PHP_SELF']) ?>">
             <div class="form-group">
-                <label for="title">タスク名</label>
+                <label for="title">タスク名ひらあきやす</label>
                 <input type="text" class="form-control" name="title" id="title" placeholder="タスク名" required>
             </div>
             <div class="form-group">
-                <label for="due_date">期限</label>
+                <label for="due_date">期限ひらあきやす</label>
                 <input type="text" class="form-control" name="due_date" id="due_date" required>
             </div>
             <br><br>
