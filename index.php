@@ -4,7 +4,17 @@ require_once './todo.php';
 $todo = new Todo();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $todo->post($_POST['title'], $_POST['due_date']);
+    if (isset($_POST["method"]) && $_POST["method"] === "DELETE") {
+        $todo->delete();
+    } else  if (isset($_POST["method"]) && $_POST["method"] === "UPDATE") {
+        $todo->update($_POST['todo_id'], $_POST['status']);
+    } else {
+        $todo->post($_POST['title'], $_POST['due_date']);
+    }
+    // ブラウザのリロード対策
+    $redirect_url = $_SERVER['HTTP_REFERER'];
+        header("Location: $redirect_url");
+        exit;
 }
 ?>
 <!DOCTYPE>
@@ -42,7 +52,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <hr>
 
         <h2 class="text-muted py-3">やること一覧</h2>
-
+        <form method="POST" action="<?php print($_SERVER['PHP_SELF']) ?>">
+            <input type="hidden" name="method" value="DELETE">
+            <button class="btn btn-danger" type="submit">TODOを全削除する</button>
+        </form>
         <?php
         $todo_list = $todo->getList();
         ?>
@@ -110,5 +123,6 @@ flatpickr(document.getElementById('due_date'), {
     minDate: new Date()
 });
 </script>
+
 </body>
 </html>
