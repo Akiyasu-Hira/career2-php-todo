@@ -6,18 +6,17 @@ $todo = new Todo();
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_POST["method"]) && $_POST["method"] === "DELETE_ALL") {
         $todo->deleteAll();
-    } else if (isset($_POST["method"]) && $_POST["method"] === "DELETE") {
-        $todo->delete($_POST["todo_id"]);
-    } else if (isset($_POST["method"]) && $_POST["method"] === "UPDATE") {
-        $todo->update($_POST["todo_id"], $_POST['status']);
-    } else {
-        $todo->post($_POST['title'], $_POST['due_date']);
-    }
 
-    //ブラウザのリロード対策
-    $redirect_url = $_SERVER['HTTP_REFERER'];
-    header("Location: $redirect_url");
-    exit;
+    } elseif (isset($_POST["method"]) && $_POST["method"] === "DELETE") {
+        $todo->delete($_POST["todo_id"]);
+
+    } elseif (isset($_POST["method"]) && $_POST["method"] === "UPDATE") {
+        $todo->update($_POST["todo_id"], $_POST['status']);
+
+    } else {
+        $todo->post($_POST['title'], $_POST['due_date'], $_FILES['image']);
+
+    }
 }
 ?>
 <!DOCTYPE>
@@ -38,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         <h1 class="text-center text-primary py-3">TODO App</h1>
 
         <h2 class="text-muted py-3">TODO作成</h2>
-        <form method="POST" action="<?php print($_SERVER['PHP_SELF']) ?>">
+        <form method="POST" enctype="multipart/form-data"  action="<?php print($_SERVER['PHP_SELF']) ?>">
             <div class="form-group">
                 <label for="title">タスク名</label>
                 <input type="text" class="form-control" name="title" id="title" placeholder="タスク名" required>
@@ -47,6 +46,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <label for="due_date">期限</label>
                 <input type="text" class="form-control" name="due_date" id="due_date" required>
             </div>
+            <p>アップロード画像</p>
+            <input type="file" name="image">
             <br><br>
             <input type="hidden" name="token" value="<?php echo $_SESSION['token']; ?>">
             <input class="btn btn-primary"  type="submit" name="btn" value="TODOを作成する">
