@@ -4,17 +4,20 @@ require_once './todo.php';
 $todo = new Todo();
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    if (isset($_POST["method"]) && $_POST["method"] === "DELETE") {
-        $todo->delete();
-    } else  if (isset($_POST["method"]) && $_POST["method"] === "UPDATE") {
-        $todo->update($_POST['todo_id'], $_POST['status']);
+    if (isset($_POST["method"]) && $_POST["method"] === "DELETE_ALL") {
+        $todo->deleteAll();
+    } else if (isset($_POST["method"]) && $_POST["method"] === "DELETE") {
+        $todo->delete($_POST["todo_id"]);
+    } else if (isset($_POST["method"]) && $_POST["method"] === "UPDATE") {
+        $todo->update($_POST["todo_id"], $_POST['status']);
     } else {
         $todo->post($_POST['title'], $_POST['due_date']);
     }
-    // ブラウザのリロード対策
+
+    //ブラウザのリロード対策
     $redirect_url = $_SERVER['HTTP_REFERER'];
-        header("Location: $redirect_url");
-        exit;
+    header("Location: $redirect_url");
+    exit;
 }
 ?>
 <!DOCTYPE>
@@ -31,7 +34,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 <body>
 
 <div class="container">
-    <div class="col-md-8">
+    <div class="col-md-12">
         <h1 class="text-center text-primary py-3">TODO App</h1>
 
         <h2 class="text-muted py-3">TODO作成</h2>
@@ -53,7 +56,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         <h2 class="text-muted py-3">やること一覧</h2>
         <form method="POST" action="<?php print($_SERVER['PHP_SELF']) ?>">
-            <input type="hidden" name="method" value="DELETE">
+            <input type="hidden" name="method" value="DELETE_ALL">
             <button class="btn btn-danger" type="submit">TODOを全削除する</button>
         </form>
         <?php
@@ -66,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 <th>期限</th>
                 <th>状態</th>
                 <th>更新</th>
+                <th>削除</th>
             </tr>
             </thead>
             <tbody>
@@ -94,6 +98,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                             <button class="btn btn-primary" type="submit">変更</button>
                         </td>
                     </form>
+                    <td>
+                        <form method="POST" action="<?php print($_SERVER['PHP_SELF']) ?>">
+                            <input type="hidden" name="method" value="DELETE">
+                            <input type="hidden" name="todo_id" value="<?=$todo["id"]; ?>">
+                            <button class="btn btn-danger" type="submit">削除</button>
+                        </form>
+                    </td>
                 </tr>
                 <?php
             }
@@ -123,6 +134,5 @@ flatpickr(document.getElementById('due_date'), {
     minDate: new Date()
 });
 </script>
-
 </body>
 </html>
